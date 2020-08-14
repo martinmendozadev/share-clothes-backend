@@ -267,7 +267,8 @@ tags
 
 # Django
 tclothes/media/
-tclothes/**/migrations/
+tclothes/**/migrations/**
+!tclothes/**/migrations/__init__.py
 
 # Pycharm
 .idea/

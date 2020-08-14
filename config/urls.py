@@ -8,5 +8,7 @@ from django.contrib import admin
 urlpatterns = [
     # Django Admin
     path(settings.ADMIN_URL, admin.site.urls),
+    # Local
+    path('users/', include(('tclothes.users.urls', 'users'), namespace='users')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
