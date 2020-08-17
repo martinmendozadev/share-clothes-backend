@@ -10,5 +10,6 @@ urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     # Local
     path('users/', include(('tclothes.users.urls', 'users'), namespace='users')),
+    path('clothes/', include(('tclothes.clothes.urls', 'clothes'), namespace='clothes')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

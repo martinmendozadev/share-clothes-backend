@@ -1,0 +1,1 @@
+from .clothes import ClothesModel
