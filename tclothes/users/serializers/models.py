@@ -12,10 +12,12 @@ class ProfileModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = (
+            'picture',
             'city',
             'state',
             'reputation',
         )
+        read_only_fields = ['reputation']
 
 
 class UserModelSerializer(serializers.ModelSerializer):
@@ -25,5 +27,8 @@ class UserModelSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'username',
+            'first_name',
+            'last_name',
+            'email',
             'profile'
         )

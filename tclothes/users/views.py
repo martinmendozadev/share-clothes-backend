@@ -12,7 +12,8 @@ from tclothes.users.models import User
 from tclothes.users.serializers import (
     UserLoginSerializer,
     UserModelSerializer,
-    UserSignUpSerializer
+    UserSignUpSerializer,
+    ProfileModelSerializer,
 )
 
 # Permissions
@@ -21,7 +22,9 @@ from tclothes.users.permissions import IsAccountOwner
 
 
 class UserViewSet(viewsets.GenericViewSet,
-                  mixins.RetrieveModelMixin):
+                  mixins.UpdateModelMixin,
+                  mixins.RetrieveModelMixin,
+                  mixins.DestroyModelMixin,):
     """Users view set.
     Handle users login account.
     """
@@ -32,9 +35,9 @@ class UserViewSet(viewsets.GenericViewSet,
 
     def get_permissions(self):
         """Assign permissions based on action."""
-        if self.action in ['signup', 'login', 'verify']:
+        if self.action in ['signup', 'login']:
             permissions = [AllowAny]
-        elif self.action in ['retrieve']:
+        elif self.action in ['retrieve', 'update', 'partial_update', 'profile']:
             permissions = [IsAuthenticated, IsAccountOwner]
         else:
             permissions = [IsAuthenticated]
@@ -60,3 +63,20 @@ class UserViewSet(viewsets.GenericViewSet,
         user = serializer.save()
         data = UserModelSerializer(user).data
         return Response(data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=['put', 'patch'])
+    def profile(self, request, *args, **kwargs):
+        """Update profile data."""
+        print(f'Profile: {self.get_object().profile}')
+        user = self.get_object()
+        profile = user.profile
+        partial = request.method == 'PATCH'
+        serializer = ProfileModelSerializer(
+            profile,
+            data=request.data,
+            partial=partial
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        data = UserModelSerializer(user).data
+        return Response(data)
