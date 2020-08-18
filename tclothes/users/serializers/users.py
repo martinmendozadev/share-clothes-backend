@@ -53,6 +53,9 @@ class UserSignUpSerializer(serializers.Serializer):
     username_unique = UniqueValidator(queryset=User.objects.all())
     username = serializers.CharField(max_length=15, validators=[username_regex, username_unique])
 
+    first_name = serializers.CharField(max_length=150)
+    last_name = serializers.CharField(max_length=150)
+
     # Password
     password = serializers.CharField(min_length=8, max_length=64)
     password_confirmation = serializers.CharField(min_length=8, max_length=64)
