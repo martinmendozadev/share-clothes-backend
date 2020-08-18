@@ -93,4 +93,4 @@ class ClothesModel(TClothesModel):
 
     def __str__(self):
         """Return Clothe small description."""
-        return f'Owner is {self.owner_is.username}, name is: {self.name}, is available to sell {self.sell}'
+        return f'Owner is {self.owner_is} with {self.likes} likes.'
