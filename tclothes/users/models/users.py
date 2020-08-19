@@ -33,7 +33,7 @@ class User(AbstractUser, TClothesModel):
 
     def __str__(self):
         """Return phone number"""
-        return self.username
+        return f'{self.first_name} {self.last_name}'
 
     def get_short_name(self):
         """Return username."""
