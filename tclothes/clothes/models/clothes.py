@@ -57,9 +57,10 @@ class ClothesModel(TClothesModel):
         blank=True,
     )
     GENDER = [
-        ('F', 'F'),
-        ('M', 'M'),
-        ('U', 'U'),
+        ('F', 'Female'),
+        ('M', 'Male'),
+        ('U', 'Unisex'),
+        ('NS', 'No specific')
     ]
     gender = models.CharField(
         'gender',

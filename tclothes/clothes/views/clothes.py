@@ -32,9 +32,9 @@ class ClothesViewSet(mixins.CreateModelMixin,
     # Filters
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
     search_fields = ['size', '^color', '^category']
-    ordering_fields = ['size', 'gender', 'created_at']
+    ordering_fields = ['likes', 'size', 'gender', 'created_at']
     ordering = ['-likes']
-    filterset_fields = ['sell', 'is_hide']
+    filter_fields = ['sell', 'is_hide']
 
     def get_queryset(self):
         """Restrict list to public-only."""
