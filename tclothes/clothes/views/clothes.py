@@ -1,9 +1,7 @@
 """Clothes views."""
 
 # Django REST Framework
-from rest_framework.decorators import action
-from rest_framework import status, viewsets, mixins
-from rest_framework.response import Response
+from rest_framework import viewsets, mixins
 
 # Permissions
 from rest_framework.permissions import IsAuthenticated
@@ -16,10 +14,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from tclothes.clothes.models import ClothesModel
 
 # Serializer
-from tclothes.clothes.serializers import (
-    ClotheModelSerializer,
-    CreateClotheSerializer
-)
+from tclothes.clothes.serializers import ClotheModelSerializer
 
 
 class ClothesViewSet(mixins.CreateModelMixin,
@@ -33,6 +28,13 @@ class ClothesViewSet(mixins.CreateModelMixin,
     """
 
     serializer_class = ClotheModelSerializer
+
+    # Filters
+    filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
+    search_fields = ['size', '^color', '^category']
+    ordering_fields = ['size', 'gender', 'created_at']
+    ordering = ['-likes']
+    filterset_fields = ['sell', 'is_hide']
 
     def get_queryset(self):
         """Restrict list to public-only."""
