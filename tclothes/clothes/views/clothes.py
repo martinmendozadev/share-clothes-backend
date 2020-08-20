@@ -5,6 +5,7 @@ from rest_framework import viewsets, mixins
 
 # Permissions
 from rest_framework.permissions import IsAuthenticated
+from tclothes.clothes.permissions import IsClotheOwner
 
 # Filters
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -45,5 +46,10 @@ class ClothesViewSet(mixins.CreateModelMixin,
 
     def get_permissions(self):
         """Assign permissions based on action."""
-        permissions = [IsAuthenticated]
-        return [permission() for permission in permissions]
+        if self.action in ['retrieve']:
+            permissions = [IsAuthenticated]
+        elif self.action in ['update', 'partial_update']:
+            permissions = [IsAuthenticated, IsClotheOwner]
+        else:
+            permissions = [IsAuthenticated]
+        return [p() for p in permissions]
