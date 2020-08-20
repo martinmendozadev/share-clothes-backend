@@ -21,7 +21,7 @@ class ClothesViewSet(mixins.ListModelMixin,
                      mixins.RetrieveModelMixin,
                      viewsets.GenericViewSet,):
     """Clothes view set.
-    Handle Clothes manage.
+    Handle Clothes display.
     """
 
     serializer_class = ClotheModelSerializer

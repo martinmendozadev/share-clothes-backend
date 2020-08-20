@@ -1,4 +1,4 @@
-"""Clothes views."""
+"""Users Clothes views."""
 
 # Django REST Framework
 from rest_framework import viewsets, mixins
@@ -21,9 +21,12 @@ class UsersClothesViewSet(mixins.CreateModelMixin,
                           mixins.DestroyModelMixin,
                           viewsets.GenericViewSet,):
     """Clothes view set.
-    Handle Clothes manage.
+    Handle Users Clothes manage.
     """
 
     serializer_class = ClotheModelSerializer
-    queryset = ClothesModel.objects.all()
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """Return all users clothes."""
+        return ClothesModel.objects.filter(owner_is=self.request.user)
