@@ -1,2 +1,2 @@
 from .clothes import ClothesModel
-from .match import InteractionsModel
+from .interactions import InteractionsModel
