@@ -14,3 +14,20 @@ class ClothesAdmin(admin.ModelAdmin):
     list_display = ('owner_is', 'size', 'color')
     search_fields = ('category', 'color', 'gender')
     list_filter = ('is_hide', 'likes', 'dislikes')
+
+    fieldsets = (
+        ('Owner',{'fields':('owner_is',)}),
+        ('Description', {
+            'fields':(
+                ('picture', 'category'),
+                ('color', 'size', 'gender'),
+                ('description'),
+            )
+        }),
+        ('Status', {
+            'fields':(('sell', 'is_hide'),)
+        }),
+        ('Interactions',{
+            'fields':(('likes', 'dislikes'),)
+        })
+    )
