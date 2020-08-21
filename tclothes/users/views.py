@@ -67,7 +67,6 @@ class UserViewSet(viewsets.GenericViewSet,
     @action(detail=True, methods=['put', 'patch'])
     def profile(self, request, *args, **kwargs):
         """Update profile data."""
-        print(f'Profile: {self.get_object().profile}')
         user = self.get_object()
         profile = user.profile
         partial = request.method == 'PATCH'
