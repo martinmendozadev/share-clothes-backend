@@ -46,12 +46,12 @@ class Clothes:
                 ])
 
 def run():
-        how_many_clothes = int(input('¿cuantas prendas quieres crear?: '))
-        create_clothe = Clothes(how_many_clothes).write
-        create_clothe()
-        print (f'Se han creado {how_many_clothes} prendas')
-if __name__ == '__main__':
-    
+    how_many_clothes = int(input('¿cuantas prendas quieres crear?: '))
+    create_clothe = Clothes(how_many_clothes).write
+    create_clothe()
+    print (f'Se han creado {how_many_clothes} prendas')
+
+if __name__ == '__main__':    
     try:
         run()
     except ValueError:
