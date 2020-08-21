@@ -22,30 +22,43 @@ class Clothes:
         pass
     
     def choice_function(self, values_list):
+        """Choice value random of values lists"""
         value = random.choice(values_list)
         return value
 
-    def random_nuber(self):
-        pass
+    def random_boolean(self):
+        """Choice random value for generate true or false"""
+        value = random.randint(0, 2)
+        if value == 0:
+            return False
+        else:
+            return True
 
     def write(self):
+        """Save clothes in csv file"""
         with open('clothes.csv', 'w') as clothes_file:
             writer = csv.writer(clothes_file)
+            writer.writerow(['category', 'size', 'color', 'gender', 'brand', 'sell', 'is_hide'])
             for i in range(self.how_many_clothes):
                 category = self.choice_function(categories_list)
                 size = self.choice_function(SIZES_LIST)
                 color = self.choice_function(color_list)
                 gender = self.choice_function(GENDER_LIST)
                 brand = self.choice_function(brands_list)
+                sell = self.random_boolean()
+                is_hide = self.random_boolean()
                 writer.writerow([
                     category,
                     size,
                     color,
                     gender,
-                    brand
+                    brand,
+                    sell,
+                    is_hide
                 ])
 
 def run():
+    """Run script logic to create clothes"""
     how_many_clothes = int(input('¿cuantas prendas quieres crear?: '))
     create_clothe = Clothes(how_many_clothes).write
     create_clothe()
