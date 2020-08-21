@@ -2,6 +2,7 @@
 
 # Django
 from django.db import models
+from django.core.validators import MaxValueValidator
 
 # Utilities
 from tclothes.utils.baseModels import TClothesModel
@@ -17,10 +18,17 @@ class ClothesModel(TClothesModel):
 
     # Properties
     picture = models.ImageField(
-        'Clothes Picture',
+        'Clothes main picture',
         upload_to='clothes/pictures/',
         blank=True,
         null=True,
+    )
+    limit_validator = MaxValueValidator(limit_value=9)
+    limit_pictures = models.PositiveSmallIntegerField(
+        'Clothe pictures related',
+        default=0,
+        validators=[limit_validator],
+        help_text="The limits for clothes pictures are 9 items. Excluding the main.",
     )
     description = models.TextField(
         'Clothe description',
@@ -38,14 +46,14 @@ class ClothesModel(TClothesModel):
         ('NS', 'No specific'),
     ]
     size = models.CharField(
-        'Clothe Size',
+        'Clothe size',
         max_length=3,
         choices=CLOTHES_SIZE,
         default='NS',
-        help_text="Base on international sizes. NS means no specific.",
+        help_text="Base on international sizes. NS means 'no specific'.",
     )
     color = models.CharField(  # I would like that this we a hexadecimal code.
-        'Clothe Color',
+        'Clothe color',
         max_length=16,
         blank=True,
         help_text="User can choose the clothe's color.",
@@ -63,35 +71,48 @@ class ClothesModel(TClothesModel):
         ('NS', 'No specific')
     ]
     gender = models.CharField(
-        'gender',
+        'Gender preferential for clothe.',
         max_length=2,
         choices=GENDER,
         default='NS',
         help_text="F, M ,U. (NS) No specific.",
     )
+    brand = models.CharField(
+        'Clothe brand',
+        max_length=70,
+        blank=True,
+    )
+    CLOTHE_STATE = [
+        ('N', 'New'),
+        ('G', 'Good'),
+        ('U', 'Used'),
+        ('NS', 'No specific')
+    ]
+    state = models.CharField(
+        'Clothe state',
+        max_length=2,
+        choices=CLOTHE_STATE,
+        default='NS',
+        help_text="F, M ,U. (NS) No specific.",
+    )
 
     # Status
-    sell = models.BooleanField(
-        'Clothes is available to sell',
+    public = models.BooleanField(
+        'Clothe is public',
         default=True,
-        help_text="Is true when the user want sell the clothe.",
-    )
-    is_hide = models.BooleanField(
-        'Clothe is hide',
-        default=False,
         help_text="The user can choose when hide her/him clothe from catalog.",
     )
 
     # Stats
     likes = models.PositiveIntegerField(
-        'Clothe Likes',
+        'Clothe likes',
         default=0,
     )
     dislikes = models.PositiveIntegerField(
-        'Clothe Dislikes',
+        'Clothe dislikes',
         default=0,
     )
 
     def __str__(self):
         """Return Clothe small description."""
-        return f'Owner is {self.owner_is} with {self.likes} likes.'
+        return f'Owner: {self.owner_is}. Category belongs: {self.category}.'

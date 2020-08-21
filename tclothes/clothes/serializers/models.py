@@ -16,14 +16,16 @@ class ClotheModelSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'picture',
+            'limit_pictures',
             'description',
             'size',
             'color',
             'category',
             'gender',
-            'sell',
-            'is_hide',
+            'brand',
+            'state',
+            'public',
             'likes',
             'dislikes',
         )
-        read_only_fields = ['id', 'likes', 'dislikes']
+        read_only_fields = ['id', 'limit_pictures', 'likes', 'dislikes']

@@ -25,7 +25,7 @@ class ClothesViewSet(mixins.ListModelMixin,
     """
 
     serializer_class = ClotheModelSerializer
-    queryset = ClothesModel.objects.filter(is_hide=False)
+    queryset = ClothesModel.objects.filter(public=True)
     permission_classes = [IsAuthenticated]
 
     # Filters
@@ -33,4 +33,4 @@ class ClothesViewSet(mixins.ListModelMixin,
     search_fields = ['size', '^color', '^category']
     ordering_fields = ['likes', 'size', 'gender', 'created_at']
     ordering = ['-likes']
-    filter_fields = ['sell', 'is_hide']
+    filter_fields = ['brand']

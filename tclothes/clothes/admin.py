@@ -11,6 +11,7 @@ from tclothes.clothes.models import ClothesModel
 class ClothesAdmin(admin.ModelAdmin):
     """Clothes model admin."""
 
-    list_display = ('owner_is', 'size', 'color')
+    list_display = ('category', 'owner_is', 'size', 'color')
     search_fields = ('category', 'color', 'gender')
-    list_filter = ('is_hide', 'likes', 'dislikes')
+    list_filter = ('public', 'likes', 'dislikes')
+    readonly_fields = ['limit_pictures', 'likes', 'dislikes']
