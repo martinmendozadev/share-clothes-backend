@@ -43,7 +43,7 @@ class PictureClotheModelSerializer(serializers.ModelSerializer):
 class ClotheModelSerializer(serializers.ModelSerializer):
     """Clothes model serializer."""
 
-    more_pictures = PictureClotheModelSerializer(read_only=True)
+    more_pictures = PictureClotheModelSerializer(read_only=True, many=True)
 
     class Meta:
         """Meta class."""
