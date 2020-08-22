@@ -4,7 +4,15 @@
 from rest_framework import serializers
 
 # Models
-from tclothes.clothes.models import ClothesModel
+from tclothes.clothes.models import ClothesModel, InteractionsModel
+
+
+class InteractionsModelSerializer(serializers.ModelSerializer):
+    """Interactions Model."""
+
+    class Meta:
+        model = InteractionsModel
+        fields = '__all__'
 
 
 class ClotheModelSerializer(serializers.ModelSerializer):
