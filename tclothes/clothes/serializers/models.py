@@ -16,6 +16,17 @@ class InteractionsModelSerializer(serializers.ModelSerializer):
         required_fields = fields
 
 
+class NotificationsModelSerializer(serializers.ModelSerializer):
+    """Interactions Model."""
+
+    user = serializers.ReadOnlyField(read_only=True, source='user.username')
+
+    class Meta:
+        model = InteractionsModel
+        fields = ['clothe', 'user', 'value']
+        read_only_fields = fields
+
+
 class ClotheModelSerializer(serializers.ModelSerializer):
     """Clothes model serializer."""
 

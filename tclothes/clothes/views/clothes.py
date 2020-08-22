@@ -14,10 +14,10 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 # Models
-from tclothes.clothes.models import ClothesModel
+from tclothes.clothes.models import ClothesModel, InteractionsModel
 
 # Serializer
-from tclothes.clothes.serializers import ClotheModelSerializer
+from tclothes.clothes.serializers import ClotheModelSerializer, NotificationsModelSerializer
 
 
 class ClothesViewSet(mixins.ListModelMixin,
@@ -60,3 +60,11 @@ class ClothesViewSet(mixins.ListModelMixin,
         clothe.save()
 
         return Response(status=status.HTTP_202_ACCEPTED)
+
+    @action(detail=False, methods=['get'])
+    def notifications(self, request, *args, **kwargs):
+        """Retrieve notifications user matches."""
+        user = request.user
+        query = InteractionsModel.objects.filter(user=user, value__in=['LIKE', 'SUPERLIKE'])
+        data = NotificationsModelSerializer(query, many=True).data
+        return Response(data, status=status.HTTP_200_OK)
