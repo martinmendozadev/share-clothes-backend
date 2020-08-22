@@ -12,7 +12,8 @@ class InteractionsModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = InteractionsModel
-        fields = '__all__'
+        fields = ('value', 'clothe')
+        required_fields = fields
 
 
 class ClotheModelSerializer(serializers.ModelSerializer):
