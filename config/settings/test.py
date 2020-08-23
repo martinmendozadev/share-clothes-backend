@@ -1,5 +1,4 @@
 """Testing settings.
-
 With these settings, tests run faster.
 """
 
@@ -9,7 +8,7 @@ from .base import env
 # Base
 DEBUG = False
 SECRET_KEY = env("DJANGO_SECRET_KEY", default="7lEaACt4wsCj8JbXYgQLf4BmdG5QbuHTMYUGir2Gc1GHqqb2Pv8w9iXwwlIIviI2")
-TEST_RUNNER = "django.users.runner.DiscoverRunner"
+TEST_RUNNER = "django.test.runner.DiscoverRunner"
 
 # Cache
 CACHES = {
