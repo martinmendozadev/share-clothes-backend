@@ -1,7 +1,7 @@
 """Clothes views."""
 
 # Django REST Framework
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, mixins, status, serializers
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from tclothes.clothes.serializers import InteractionsModelSerializer
@@ -18,6 +18,10 @@ from tclothes.clothes.models import ClothesModel, InteractionsModel
 
 # Serializer
 from tclothes.clothes.serializers import ClotheModelSerializer, NotificationsModelSerializer
+
+# Utils
+from datetime import timedelta
+from django.utils import timezone
 
 
 class ClothesViewSet(mixins.ListModelMixin,
@@ -54,7 +58,11 @@ class ClothesViewSet(mixins.ListModelMixin,
         if user_action == 'LIKE':
             clothe.likes += 1
         elif user_action == 'SUPERLIKE':
-            clothe.likes += 10
+            can_modify_at = clothe.modified_at + timedelta(minutes=1)
+            if timezone.now() > can_modify_at:
+                clothe.likes += 10
+            else:
+                raise serializers.ValidationError('Sorry, you only can give one Super-like per minute.')
         else:
             clothe.dislikes += 1
         clothe.save()
