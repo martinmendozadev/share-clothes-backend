@@ -42,9 +42,16 @@ class ClothesViewSet(mixins.ListModelMixin,
     ordering = ['-likes']
     filter_fields = ['brand']
 
-    @action(detail=False, methods=['post', 'put'])
+    @action(detail=False, methods=['POST', 'PUT'])
     def interactions(self, request, *args, **kwargs):
         user = request.user
+        method = request.method
+        match_obj = InteractionsModel.objects.filter(user=user, clothe_id=request.data['clothe'])
+        if method == 'POST':
+            match = InteractionsModel.objects.filter(user=user, clothe_id=request.data['clothe']).count()
+            if match > 0:
+                raise serializers.ValidationError(f'Use PUT, User its already a interaction with this clothe.')
+
         serializer = InteractionsModelSerializer(
             data=request.data,
             partial=False
@@ -55,18 +62,43 @@ class ClothesViewSet(mixins.ListModelMixin,
         # Update stats clothe
         clothe = ClothesModel.objects.get(id=request.data['clothe'])
         user_action = request.data['value']
-        if user_action == 'LIKE':
-            clothe.likes += 1
-        elif user_action == 'SUPERLIKE':
-            can_modify_at = clothe.modified_at + timedelta(minutes=1)
-            if timezone.now() > can_modify_at:
-                clothe.likes += 10
-            else:
-                raise serializers.ValidationError('Sorry, you only can give one Super-like per minute.')
-        else:
-            clothe.dislikes += 1
-        clothe.save()
+        if request.method == 'PUT':
+            try:
+                match_current_value = match_obj[1].value
+                if match_current_value != user_action:
+                    if match_current_value == 'LIKE':
+                        clothe.likes -= 1
+                    elif match_current_value == 'SUPERLIKE':
+                        clothe.likes -= 10
+                    elif match_current_value == 'DISLIKE':
+                        clothe.dislikes -= 1
 
+                    if user_action == 'LIKE':
+                        clothe.likes += 1
+                    elif user_action == 'SUPERLIKE':
+                        can_modify_at = clothe.modified_at + timedelta(minutes=1)
+                        if timezone.now() > can_modify_at:
+                            clothe.likes += 10
+                        else:
+                            raise serializers.ValidationError('Sorry, you only can give one Super-like per minute.')
+                    else:
+                        clothe.dislikes += 1
+            except:
+                raise serializers.ValidationError(f'Use POST, User has not interaction with this clothe.')
+
+        if request.method == 'POST':
+            if user_action == 'LIKE':
+                clothe.likes += 1
+            elif user_action == 'SUPERLIKE':
+                can_modify_at = clothe.modified_at + timedelta(minutes=1)
+                if timezone.now() > can_modify_at:
+                    clothe.likes += 10
+                else:
+                    raise serializers.ValidationError('Sorry, you only can give one Super-like per minute.')
+            else:
+                clothe.dislikes += 1
+
+        clothe.save()
         return Response(status=status.HTTP_202_ACCEPTED)
 
     @action(detail=False, methods=['get'])
