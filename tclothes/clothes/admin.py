@@ -13,5 +13,5 @@ class ClothesAdmin(admin.ModelAdmin):
 
     list_display = ('category', 'owner_is', 'size', 'color')
     search_fields = ('category', 'color', 'gender')
-    list_filter = ('public', 'likes', 'dislikes')
-    readonly_fields = ['limit_pictures', 'likes', 'dislikes']
+    list_filter = ('public', 'likes', 'dislikes', 'super_likes')
+    readonly_fields = ['limit_pictures', 'likes', 'dislikes', 'super_likes']

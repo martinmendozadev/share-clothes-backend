@@ -47,5 +47,6 @@ class ClotheModelSerializer(serializers.ModelSerializer):
             'public',
             'likes',
             'dislikes',
+            'super_likes',
         )
-        read_only_fields = ['id', 'limit_pictures', 'likes', 'dislikes']
+        read_only_fields = ['id', 'limit_pictures', 'likes', 'dislikes', 'super_likes']

@@ -39,7 +39,7 @@ class ClothesViewSet(mixins.ListModelMixin,
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
     search_fields = ['size', '^color', '^category']
     ordering_fields = ['likes', 'size', 'gender', 'created_at']
-    ordering = ['-likes']
+    ordering = ['-super_likes', '-likes']
     filter_fields = ['brand']
 
     @action(detail=False, methods=['POST', 'PUT'])
@@ -69,7 +69,7 @@ class ClothesViewSet(mixins.ListModelMixin,
                     if match_current_value == 'LIKE':
                         clothe.likes -= 1
                     elif match_current_value == 'SUPERLIKE':
-                        clothe.likes -= 10
+                        clothe.super_likes -= 1
                     elif match_current_value == 'DISLIKE':
                         clothe.dislikes -= 1
 
@@ -78,7 +78,7 @@ class ClothesViewSet(mixins.ListModelMixin,
                     elif user_action == 'SUPERLIKE':
                         can_modify_at = clothe.modified_at + timedelta(minutes=1)
                         if timezone.now() > can_modify_at:
-                            clothe.likes += 10
+                            clothe.super_likes += 1
                         else:
                             raise serializers.ValidationError('Sorry, you only can give one Super-like per minute.')
                     else:
@@ -92,7 +92,7 @@ class ClothesViewSet(mixins.ListModelMixin,
             elif user_action == 'SUPERLIKE':
                 can_modify_at = clothe.modified_at + timedelta(minutes=1)
                 if timezone.now() > can_modify_at:
-                    clothe.likes += 10
+                    clothe.super_likes += 1
                 else:
                     raise serializers.ValidationError('Sorry, you only can give one Super-like per minute.')
             else:
@@ -105,6 +105,6 @@ class ClothesViewSet(mixins.ListModelMixin,
     def notifications(self, request, *args, **kwargs):
         """Retrieve notifications user matches."""
         user = request.user
-        query = InteractionsModel.objects.filter(user=user, value__in=['LIKE', 'SUPERLIKE'])
+        query = InteractionsModel.objects.filter(clothe__owner_is=user, value__in=['LIKE', 'SUPERLIKE'])
         data = NotificationsModelSerializer(query, many=True).data
         return Response(data, status=status.HTTP_200_OK)

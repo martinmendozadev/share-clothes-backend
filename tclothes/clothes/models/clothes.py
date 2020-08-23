@@ -112,6 +112,10 @@ class ClothesModel(TClothesModel):
         'Clothe dislikes',
         default=0,
     )
+    super_likes = models.PositiveIntegerField(
+        'Clothe Super-likes',
+        default=0,
+    )
 
     def __str__(self):
         """Return Clothe small description."""
