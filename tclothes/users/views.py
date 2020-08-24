@@ -37,7 +37,7 @@ class UserViewSet(viewsets.GenericViewSet,
         """Assign permissions based on action."""
         if self.action in ['signup', 'login']:
             permissions = [AllowAny]
-        elif self.action in ['retrieve', 'update', 'partial_update', 'profile']:
+        elif self.action in ['retrieve', 'update', 'partial_update', 'profile', 'destroy']:
             permissions = [IsAuthenticated, IsAccountOwner]
         else:
             permissions = [IsAuthenticated]
