@@ -5,7 +5,10 @@ from .base import env
 
 # Base
 SECRET_KEY = env('DJANGO_SECRET_KEY')
-ALLOWED_HOSTS = ["68.183.108.146"]
+ALLOWED_HOSTS = [
+    "68.183.108.146",
+    "0.0.0.0"
+]
 
 # Cache
 CACHES = {
@@ -32,9 +35,6 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [  # noqa F405
 
 # Admin
 ADMIN_URL = env('DJANGO_ADMIN_URL')
-
-# Gunicorn
-INSTALLED_APPS += ['gunicorn']  # noqa F405
 
 # WhiteNoise
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')  # noqa F405

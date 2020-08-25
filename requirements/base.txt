@@ -20,10 +20,3 @@ whitenoise==5.2.0
 # Django REST Framework
 djangorestframework==3.11.1
 django-filter==2.3.0
-
-
-# Production
-gunicorn==20.0.4
-
-# Static files
-django-storages[boto3]==1.9.1

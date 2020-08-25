@@ -1,4 +1,4 @@
 #!/bin/bash
 
-export COMPOSE_FILE=/root/tclothes/local.yml
+export COMPOSE_FILE=/root/tclothes/production.yml
 exec docker-compose up
