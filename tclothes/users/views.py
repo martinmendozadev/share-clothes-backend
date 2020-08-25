@@ -37,7 +37,7 @@ class UserViewSet(viewsets.GenericViewSet,
         """Assign permissions based on action."""
         if self.action in ['signup', 'login']:
             permissions = [AllowAny]
-        elif self.action in ['retrieve', 'update', 'partial_update', 'profile']:
+        elif self.action in ['retrieve', 'update', 'partial_update', 'profile', 'destroy']:
             permissions = [IsAuthenticated, IsAccountOwner]
         else:
             permissions = [IsAuthenticated]
@@ -67,7 +67,6 @@ class UserViewSet(viewsets.GenericViewSet,
     @action(detail=True, methods=['put', 'patch'])
     def profile(self, request, *args, **kwargs):
         """Update profile data."""
-        print(f'Profile: {self.get_object().profile}')
         user = self.get_object()
         profile = user.profile
         partial = request.method == 'PATCH'

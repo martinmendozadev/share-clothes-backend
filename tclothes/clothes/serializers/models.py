@@ -4,7 +4,27 @@
 from rest_framework import serializers
 
 # Models
-from tclothes.clothes.models import ClothesModel
+from tclothes.clothes.models import ClothesModel, InteractionsModel
+
+
+class InteractionsModelSerializer(serializers.ModelSerializer):
+    """Interactions Model."""
+
+    class Meta:
+        model = InteractionsModel
+        fields = ('value', 'clothe')
+        required_fields = fields
+
+
+class NotificationsModelSerializer(serializers.ModelSerializer):
+    """Interactions Model."""
+
+    user = serializers.ReadOnlyField(read_only=True, source='user.username')
+
+    class Meta:
+        model = InteractionsModel
+        fields = ['clothe', 'user', 'value']
+        read_only_fields = fields
 
 
 class ClotheModelSerializer(serializers.ModelSerializer):
@@ -16,14 +36,17 @@ class ClotheModelSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'picture',
+            'limit_pictures',
             'description',
             'size',
             'color',
             'category',
             'gender',
-            'sell',
-            'is_hide',
+            'brand',
+            'state',
+            'public',
             'likes',
             'dislikes',
+            'super_likes',
         )
-        read_only_fields = ['id', 'likes', 'dislikes']
+        read_only_fields = ['id', 'limit_pictures', 'likes', 'dislikes', 'super_likes']
