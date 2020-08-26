@@ -20,10 +20,10 @@ class UserLoginSerializer(serializers.Serializer):
     """
 
     phone_regex = RegexValidator(
-        regex=r'\+?1?\d{9,15}$',
-        message="Phone number must be entered in the format: +123456789012. Up to 15 digits allowed."
+        regex=r'^[0-9]\d{9,14}$',
+        message="Phone number must be entered in the format: 123456789012. Up to 15 digits allowed."
     )
-    phone_number = serializers.CharField(validators=[phone_regex], max_length=17)
+    phone_number = serializers.CharField(validators=[phone_regex], max_length=15)
     password = serializers.CharField(min_length=8, max_length=255)
 
     def validate(self, attrs):
@@ -47,8 +47,8 @@ class UserSignUpSerializer(serializers.Serializer):
 
     # username => phone_number
     username_regex = RegexValidator(
-        regex=r'\+?1?\d{10,15}$',
-        message="Phone number must be entered in the format: +123456789. Into 10 and 15 digits."
+        regex=r'^[0-9]\d{9,14}$',
+        message="Phone number must be entered in the format: 1234567890. Into 10 and 15 digits."
     )
     username_unique = UniqueValidator(queryset=User.objects.all())
     username = serializers.CharField(max_length=15, validators=[username_regex, username_unique])

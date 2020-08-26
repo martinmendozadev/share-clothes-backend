@@ -18,8 +18,8 @@ class User(AbstractUser, TClothesModel):
 
     # username => phone_number
     username_regex = RegexValidator(
-        regex=r'\+?1?\d{10,15}$',
-        message="The phone number must be entered in the format: +123456789. Into 10 and 15 digits."
+        regex=r'^[0-9]\d{9,14}$',
+        message="The phone number must be entered in the format: 1234567890. Into 10 and 15 digits."
     )
     username = models.CharField(
         'user phone number',
