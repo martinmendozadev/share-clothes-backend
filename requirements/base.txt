@@ -20,3 +20,6 @@ whitenoise==5.2.0
 # Django REST Framework
 djangorestframework==3.11.1
 django-filter==2.3.0
+
+# Headers Response
+django-cors-headers==3.4.0
