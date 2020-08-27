@@ -36,10 +36,6 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [  # noqa F405
 # Admin
 ADMIN_URL = env('DJANGO_ADMIN_URL')
 
-# WhiteNoise
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')  # noqa F405
-
-
 # Logging
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
