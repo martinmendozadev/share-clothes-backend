@@ -272,3 +272,6 @@ tclothes/**/migrations/**
 
 # Pycharm
 .idea/
+
+# Scripts files
+*.csv
