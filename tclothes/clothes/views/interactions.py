@@ -3,13 +3,14 @@
 # Utilities
 from datetime import timedelta
 from django.utils import timezone
+from rest_framework import serializers
 
 class Interactions:
     """Interactions objects define logic of all interactions of application"""
     def __init__(self, user_action, match_obj, clothe):
         self.user_action = user_action
-        self.match_obj = user_action
-        self.clothe = user_action
+        self.match_obj = match_obj
+        self.clothe = clothe
     
     def match_action(self):
         clothe = self.clothe
@@ -44,3 +45,5 @@ class Interactions:
                 raise serializers.ValidationError('Sorry, you only can give one Super-like per minute.')
         else:
             clothe.dislikes += 1
+        
+        clothe.save()
