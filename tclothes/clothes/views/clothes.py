@@ -19,9 +19,8 @@ from tclothes.clothes.models import ClothesModel, InteractionsModel
 # Serializer
 from tclothes.clothes.serializers import ClotheModelSerializer, NotificationsModelSerializer
 
-# Utils
-from datetime import timedelta
-from django.utils import timezone
+# Interactions
+from tclothes.clothes.views.interactions import Interactions
 
 
 class ClothesViewSet(mixins.ListModelMixin,
@@ -62,41 +61,14 @@ class ClothesViewSet(mixins.ListModelMixin,
         # Update stats clothe
         clothe = ClothesModel.objects.get(id=request.data['clothe'])
         user_action = request.data['value']
+        interactions = Interactions(user_action, match_obj, clothe)
         if request.method == 'PUT':
-            try:
-                match_current_value = match_obj[1].value
-                if match_current_value != user_action:
-                    if match_current_value == 'LIKE':
-                        clothe.likes -= 1
-                    elif match_current_value == 'SUPERLIKE':
-                        clothe.super_likes -= 1
-                    elif match_current_value == 'DISLIKE':
-                        clothe.dislikes -= 1
-
-                    if user_action == 'LIKE':
-                        clothe.likes += 1
-                    elif user_action == 'SUPERLIKE':
-                        can_modify_at = clothe.modified_at + timedelta(minutes=1)
-                        if timezone.now() > can_modify_at:
-                            clothe.super_likes += 1
-                        else:
-                            raise serializers.ValidationError('Lo sentimos, solo puedes dar un Super-like cada minuto.')
-                    else:
-                        clothe.dislikes += 1
-            except:
-                raise serializers.ValidationError(f'Use POST, User has not interaction with this clothe.')
+            create_action = interactions.match_action
+            create_action()
 
         if request.method == 'POST':
-            if user_action == 'LIKE':
-                clothe.likes += 1
-            elif user_action == 'SUPERLIKE':
-                can_modify_at = clothe.modified_at + timedelta(minutes=1)
-                if timezone.now() > can_modify_at:
-                    clothe.super_likes += 1
-                else:
-                    raise serializers.ValidationError('Lo sentimos, solo puedes dar un Super-like cada minuto.')
-            else:
-                clothe.dislikes += 1
+            create_action = interactions.create_action
+            create_action()
 
         clothe.save()
         return Response(status=status.HTTP_202_ACCEPTED)

@@ -15,6 +15,9 @@ class UserAdmin(admin.ModelAdmin):
     readonly_fields = ('username',)
 
 
+admin.site.register(User, UserAdmin)
+
+
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     """Profile model admin."""
@@ -23,5 +26,12 @@ class ProfileAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'user__email', 'user__first_name', 'user__last_name')
     list_filter = ('reputation',)
 
-
-admin.site.register(User, UserAdmin)
+    fieldsets = (
+        ('Profile', {
+            'fields': (
+                ('user', 'picture'),
+                ('city', 'state'),
+                ('reputation',)
+            )
+        }),
+    )
