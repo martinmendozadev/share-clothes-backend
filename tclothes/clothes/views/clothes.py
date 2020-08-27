@@ -64,7 +64,7 @@ class ClothesViewSet(mixins.ListModelMixin,
                 create_action = interaction.create
                 create_action()
             else:
-                raise serializers.ValidationError(f'Use PUT, User its already a interaction with this clothe.')
+                raise serializers.ValidationError(f'Use PUT, POST-clothes.')
 
         # If actions is PUT go to update stats.
         if method == 'PUT':
