@@ -80,7 +80,7 @@ class ClothesViewSet(mixins.ListModelMixin,
                         if timezone.now() > can_modify_at:
                             clothe.super_likes += 1
                         else:
-                            raise serializers.ValidationError('Sorry, you only can give one Super-like per minute.')
+                            raise serializers.ValidationError('Lo sentimos, solo puedes dar un Super-like cada minuto.')
                     else:
                         clothe.dislikes += 1
             except:
@@ -94,7 +94,7 @@ class ClothesViewSet(mixins.ListModelMixin,
                 if timezone.now() > can_modify_at:
                     clothe.super_likes += 1
                 else:
-                    raise serializers.ValidationError('Sorry, you only can give one Super-like per minute.')
+                    raise serializers.ValidationError('Lo sentimos, solo puedes dar un Super-like cada minuto.')
             else:
                 clothe.dislikes += 1
 

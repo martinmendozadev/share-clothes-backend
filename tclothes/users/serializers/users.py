@@ -21,16 +21,31 @@ class UserLoginSerializer(serializers.Serializer):
 
     phone_regex = RegexValidator(
         regex=r'^[0-9]\d{9,14}$',
-        message="Phone number must be entered in the format: 123456789012. Up to 15 digits allowed."
+        message="Numero de telefono debe ser imgresado con el formato: 123456789012. Entre 10 y 15 digitos."
     )
-    phone_number = serializers.CharField(validators=[phone_regex], max_length=15)
-    password = serializers.CharField(min_length=8, max_length=255)
+    phone_number = serializers.CharField(
+        validators=[phone_regex],
+        max_length=15,
+        error_messages={
+            'max_length': "La longitud maxima de tu numero de telefono debe ser de 15 digitos.",
+        }
+    )
+    password = serializers.CharField(
+        min_length=8,
+        max_length=64,
+        error_messages={
+            'min_length': "La longitud minima de la contraseña debe ser de 8 digitos.",
+            'max_length': "La longitud maxima de tu contraseña debe ser de 64 digitos.",
+            'null': "Este campo no puede ser nulo.",
+            'blank': "Este campo no piede ser enviando en blanco."
+        }
+    )
 
     def validate(self, attrs):
         """Check credentials."""
         user = authenticate(username=attrs['phone_number'], password=attrs['password'])
         if user is None:
-            raise serializers.ValidationError('Invalid credentials.')
+            raise serializers.ValidationError('Credenciales invalidas.')
         self.context['user'] = user
         return attrs
 
@@ -48,24 +63,58 @@ class UserSignUpSerializer(serializers.Serializer):
     # username => phone_number
     username_regex = RegexValidator(
         regex=r'^[0-9]\d{9,14}$',
-        message="Phone number must be entered in the format: 1234567890. Into 10 and 15 digits."
+        message="Numero de telefono debe ser imgresado con el formato: 123456789012. Entre 10 y 15 digitos."
     )
-    username_unique = UniqueValidator(queryset=User.objects.all())
-    username = serializers.CharField(max_length=15, validators=[username_regex, username_unique])
+    username_unique = UniqueValidator(queryset=User.objects.all(), message='Este numero, ya se encutra registrado.')
+    username = serializers.CharField(
+        max_length=15,
+        validators=[username_regex, username_unique],
+        error_messages={
+            'max_length': "La longitud maxima de tu numero de telefono debe ser de 15 digitos.",
+        },
+    )
 
-    first_name = serializers.CharField(max_length=150)
-    last_name = serializers.CharField(max_length=150)
+    first_name = serializers.CharField(
+        max_length=150,
+        error_messages={
+            'max_length': "La longitud maxima de tu apellido debe ser de 150 digitos.",
+        },
+    )
+    last_name = serializers.CharField(
+        max_length=150,
+        error_messages={
+            'max_length': "La longitud maxima de tu nombre debe ser de 150 digitos.",
+        },
+    )
 
     # Password
-    password = serializers.CharField(min_length=8, max_length=64)
-    password_confirmation = serializers.CharField(min_length=8, max_length=64)
+    password = serializers.CharField(
+        min_length=8,
+        max_length=64,
+        error_messages={
+            'min_length': "La longitud minima de la contraseña debe ser de 8 digitos.",
+            'max_length': "La longitud maxima de tu contraseña debe ser de 64 digitos.",
+            'null': "Este campo no puede ser nulo.",
+            'blank': "Este campo no piede ser enviando en blanco."
+        },
+    )
+    password_confirmation = serializers.CharField(
+        min_length=8,
+        max_length=64,
+        error_messages={
+            'min_length': "La longitud minima de la contraseña debe ser de 8 digitos.",
+            'max_length': "La longitud maxima de tu contraseña debe ser de 64 digitos.",
+            'null': "Este campo no puede ser nulo.",
+            'blank': "Este campo no piede ser enviando en blanco."
+        },
+    )
 
     def validate(self, data):
         """Verify passwords match."""
         password = data['password']
         password_conf = data['password_confirmation']
         if password != password_conf:
-            raise serializers.ValidationError("Passwords don't match.")
+            raise serializers.ValidationError("Contraseñas no coinciden.")
         password_validation.validate_password(password)
         return data
 
