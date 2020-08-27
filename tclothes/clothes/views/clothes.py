@@ -45,32 +45,34 @@ class ClothesViewSet(mixins.ListModelMixin,
     def interactions(self, request, *args, **kwargs):
         user = request.user
         method = request.method
-        match_obj = InteractionsModel.objects.filter(user=user, clothe_id=request.data['clothe'])
-        if method == 'POST':
-            match = InteractionsModel.objects.filter(user=user, clothe_id=request.data['clothe']).count()
-            if match > 0:
-                raise serializers.ValidationError(f'Use PUT, User its already a interaction with this clothe.')
+        interaction_obj = InteractionsModel.objects.filter(user=user, clothe_id=request.data['clothe'])
+        clothe = ClothesModel.objects.get(id=request.data['clothe'])
+        user_action = request.data['value']
+        interaction = Interactions(user_action, interaction_obj, clothe)
 
+        # Validate input data
         serializer = InteractionsModelSerializer(
             data=request.data,
             partial=False
         )
         serializer.is_valid(raise_exception=True)
+
+        # Verify Interaction don't exist. In case exist advice to user use PUT.
+        if method == 'POST':
+            matches = interaction_obj.count()
+            if matches == 0:
+                create_action = interaction.create
+                create_action()
+            else:
+                raise serializers.ValidationError(f'Use PUT, User its already a interaction with this clothe.')
+
+        # If actions is PUT go to update stats.
+        if method == 'PUT':
+            create_action = interaction.update
+            create_action()
+
+        # If everything goes OK save the interaction.
         serializer.save(user=user)
-
-        # Update stats clothe
-        clothe = ClothesModel.objects.get(id=request.data['clothe'])
-        user_action = request.data['value']
-        interactions = Interactions(user_action, match_obj, clothe)
-        if request.method == 'PUT':
-            create_action = interactions.match_action
-            create_action()
-
-        if request.method == 'POST':
-            create_action = interactions.create_action
-            create_action()
-
-        clothe.save()
         return Response(status=status.HTTP_202_ACCEPTED)
 
     @action(detail=False, methods=['get'])

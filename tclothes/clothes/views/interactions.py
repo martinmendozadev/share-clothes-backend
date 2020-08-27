@@ -8,43 +8,39 @@ from rest_framework import serializers
 
 class Interactions:
     """Interactions objects define logic of all interactions of application"""
-    def __init__(self, user_action, match_obj, clothe):
+
+    def __init__(self, user_action, interaction_obj, clothe):
         self.user_action = user_action
-        self.match_obj = match_obj
+        self.interaction_obj = interaction_obj
         self.clothe = clothe
 
-    def match_action(self):
-        clothe = self.clothe
-        user_action = self.user_action
-        match_obj = self.match_obj
-
+    def update(self):
+        """Lees the prev value from the clothe."""
         try:
-            match_current_value = match_obj[1].value
-            if match_current_value != user_action:
+            match_current_value = self.interaction_obj[1].value
+            if match_current_value != self.user_action:
                 if match_current_value == 'LIKE':
-                    clothe.likes -= 1
+                    self.clothe.likes -= 1
                 elif match_current_value == 'SUPERLIKE':
-                    clothe.super_likes -= 1
+                    self.clothe.super_likes -= 1
                 elif match_current_value == 'DISLIKE':
-                    clothe.dislikes -= 1
+                    self.clothe.dislikes -= 1
 
-                self.create_action()
+                self.create()
         except:
             raise serializers.ValidationError(f'Use POST, User has not interaction with this clothe.')
 
-    def create_action(self):
-        clothe = self.clothe
-        user_action = self.user_action
-
-        if user_action == 'LIKE':
-            clothe.likes += 1
-        elif user_action == 'SUPERLIKE':
-            can_modify_at = clothe.modified_at + timedelta(minutes=1)
+    def create(self):
+        """Add some stat to the clothe."""
+        if self.user_action == 'LIKE':
+            self.clothe.likes += 1
+        elif self.user_action == 'SUPERLIKE':
+            can_modify_at = self.clothe.modified_at + timedelta(minutes=1)
             if timezone.now() > can_modify_at:
-                clothe.super_likes += 1
+                self.clothe.super_likes += 1
             else:
                 raise serializers.ValidationError('Sorry, you only can give one Super-like per minute.')
         else:
-            clothe.dislikes += 1
+            self.clothe.dislikes += 1
 
-        clothe.save()
+        self.clothe.save()
