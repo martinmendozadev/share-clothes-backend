@@ -12,7 +12,7 @@ class InteractionsModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = InteractionsModel
-        fields = ('value', 'clothe')
+        fields = ['value', 'clothe']
         required_fields = fields
 
 
@@ -33,36 +33,16 @@ class PictureClotheModelSerializer(serializers.ModelSerializer):
     class Meta:
         """Meta class."""
         model = ClothesPictureModel
-        fields = (
-            'id',
-            'clothe',
-            'image',
-        )
+        fields = ['clothe', 'image']
 
 
 class ClotheModelSerializer(serializers.ModelSerializer):
     """Clothes model serializer."""
 
-    more_pictures = PictureClotheModelSerializer(read_only=True, many=True)
+    images = serializers.StringRelatedField(many=True)
 
     class Meta:
         """Meta class."""
         model = ClothesModel
-        fields = (
-            'id',
-            'picture',
-            'limit_pictures',
-            'description',
-            'size',
-            'color',
-            'category',
-            'gender',
-            'brand',
-            'state',
-            'public',
-            'more_pictures',
-            'likes',
-            'dislikes',
-            'super_likes',
-        )
+        exclude = ['created_at', 'modified_at', 'owner_is']
         read_only_fields = ['id', 'limit_pictures', 'likes', 'dislikes', 'super_likes']

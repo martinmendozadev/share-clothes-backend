@@ -11,6 +11,7 @@ class ClothesPictureModel(TClothesModel):
     """Model for pictures clothe."""
     clothe = models.ForeignKey(
         'clothes.ClothesModel',
+        related_name='images',
         on_delete=models.CASCADE,
     )
     image = models.ImageField(
@@ -22,4 +23,4 @@ class ClothesPictureModel(TClothesModel):
 
     def __str__(self):
         """Return id picture and clothe str representation."""
-        return f'{self.id}:{self.image}'
+        return f'{self.image.url}'
