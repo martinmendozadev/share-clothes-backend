@@ -43,42 +43,39 @@ class ClothesViewSet(mixins.ListModelMixin,
 
     @action(detail=False, methods=['POST', 'PUT'])
     def interactions(self, request, *args, **kwargs):
-        user = request.user
-        method = request.method
-        clothe = ClothesModel.objects.get(id=request.data['clothe'])
-        user_action = request.data['value']
-        interaction_obj = None
+        """Interactions are ManyToOne but only users can have a unique interaction
+        with whatever clothe for that reason need validate the atomic registers."""
 
-        # Validate input data
-        serializer = InteractionsModelSerializer(
-            data=request.data,
-            partial=False
-        )
+        serializer = InteractionsModelSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        user = request.user
+        interaction_obj = None
+        method = request.method
+        user_action = request.data['value']
+        clothe = ClothesModel.objects.get(id=request.data['clothe'])
 
         # Verify if interaction already exist.
         try:
             interaction_obj = InteractionsModel.objects.get(user=user, clothe_id=request.data['clothe'])
         except InteractionsModel.DoesNotExist:
-            pass
+            pass  # Dont worry for this :)
 
-        # If action is POST. Create new Interaction object
+        # If action is POST when user dont have a Interaction with the clothe.
         if method == 'POST':
             if interaction_obj is None:
                 interaction = Interactions(user_action, clothe, True)
-                interaction.create()
+                interaction.add_interaction()
                 serializer.save(user=user)
             else:
-                raise serializers.ValidationError('Use PUT | POST-CLOTHES')
+                raise serializers.ValidationError('Use PUT | User have a previous interaction with this clothe.')
 
         # If actions is PUT go to update stats.
         if method == 'PUT':
             if interaction_obj is not None:
-                print(interaction_obj.id)
                 interaction = Interactions(user_action, clothe, False, interaction_obj)
                 interaction.update()
             else:
-                raise serializers.ValidationError(f'Use POST | PUT-CLOTHES.')
+                raise serializers.ValidationError('Use POST | User dont have a previous interaction with this clothe.')
 
         return Response(status=status.HTTP_202_ACCEPTED)
 
@@ -86,6 +83,6 @@ class ClothesViewSet(mixins.ListModelMixin,
     def notifications(self, request, *args, **kwargs):
         """Retrieve notifications user matches."""
         user = request.user
-        query = InteractionsModel.objects.filter(clothe__owner_is=user)  # value__in=['LIKE', 'SUPERLIKE']
+        query = InteractionsModel.objects.filter(clothe__owner_is=user, value__in=['LIKE', 'SUPERLIKE'])
         data = NotificationsModelSerializer(query, many=True).data
         return Response(data, status=status.HTTP_200_OK)
