@@ -3,6 +3,9 @@
 # Django REST framework
 from rest_framework.serializers import ValidationError
 
+# Models
+from tclothes.users.models import Profile
+
 # Utilities
 from datetime import timedelta
 from django.utils import timezone
@@ -11,10 +14,11 @@ from django.utils import timezone
 class Interactions:
     """Interactions objects define logic of all interactions of application"""
 
-    def __init__(self, user_action, clothe, is_new, interaction_obj=None):
+    def __init__(self, user_action, clothe, is_new, user, interaction_obj=None):
         self.user_action = user_action
         self.clothe = clothe
         self.is_new = is_new
+        self.user = user
         self.interaction_obj = interaction_obj
         self.like = 'LIKE'
         self.dislike = 'DISLIKE'
@@ -54,7 +58,20 @@ class Interactions:
 
     def verify_time(self):
         """Verify if user can do a super-like."""
-        can_modify_at = self.interaction_obj.modified_at + timedelta(minutes=1)
-        if timezone.now() > can_modify_at:
+        user_profile = Profile.objects.get(user=self.user)
+        date_last_super_like = user_profile.last_super_like
+
+        if date_last_super_like is None:
+            self._update_last_super_like(user_profile)
             return True
-        raise ValidationError('Solo se puede dar un SUPER-LIKE por minuto.')
+        else:
+            can_modify_at = date_last_super_like + timedelta(minutes=1)
+            if timezone.now() > can_modify_at:
+                self._update_last_super_like(user_profile)
+                return True
+            raise ValidationError('Solo se puede dar un SUPER-LIKE por minuto.')
+
+    @staticmethod
+    def _update_last_super_like(profile):
+        profile.last_super_like = timezone.now()
+        profile.save()
