@@ -74,6 +74,7 @@ class ClothesViewSet(mixins.ListModelMixin,
         # If actions is PUT go to update stats.
         if method == 'PUT':
             if interaction_obj is not None:
+                print(interaction_obj.id)
                 interaction = Interactions(user_action, clothe, False, interaction_obj)
                 interaction.update()
             else:

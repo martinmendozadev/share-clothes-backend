@@ -20,4 +20,4 @@ class ClothesAdmin(admin.ModelAdmin):
 @admin.register(InteractionsModel)
 class InteractionsAdmin(admin.ModelAdmin):
     """Interactions model admin."""
-    list_display = ('clothe', 'user', 'value')
+    list_display = ('id', 'clothe', 'user', 'value')
