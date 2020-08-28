@@ -11,13 +11,13 @@ class ProfileModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = (
+        fields = [
             'picture',
             'city',
             'state',
-            'reputation',
-        )
-        read_only_fields = ['reputation']
+            'last_super_like',
+        ]
+        read_only_fields = ['last_super_like']
 
 
 class UserModelSerializer(serializers.ModelSerializer):
@@ -25,10 +25,10 @@ class UserModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = (
+        fields = [
             'username',
             'first_name',
             'last_name',
             'email',
-            'profile'
-        )
+            'profile',
+        ]

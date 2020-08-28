@@ -16,28 +16,27 @@ class Profile(TClothesModel):
     user = models.OneToOneField('users.User', on_delete=models.CASCADE)
 
     picture = models.ImageField(
-        'profile picture',
+        'Profile picture',
         upload_to='users/pictures/',
         blank=True,
         null=True
     )
     city = models.CharField(  # In the feature this need be a Foreign Key.
-        'users city',
+        'User city',
         max_length=100,
         blank=True,
     )
     state = models.CharField(  # In the feature this need be a Foreign Key.
-        'users state',
+        'User state',
         max_length=100,
         blank=True,
     )
 
-    # Stats
-    reputation = models.DecimalField(
-        default=5.0,
-        max_digits=3,
-        decimal_places=2,
-        help_text="User's reputation based on the clothes offered."
+    # Extra Fields
+    last_super_like = models.DateTimeField(
+        'Last SUPER-LIKE date',
+        null=True,
+        help_text='Date time when the user did him/her last SUPERLIKE.'
     )
 
     def __str__(self):

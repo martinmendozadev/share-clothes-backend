@@ -29,7 +29,7 @@ class User(AbstractUser, TClothesModel):
     )
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     def __str__(self):
         """Return phone number"""
