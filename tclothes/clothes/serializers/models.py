@@ -33,13 +33,14 @@ class PictureClotheModelSerializer(serializers.ModelSerializer):
     class Meta:
         """Meta class."""
         model = ClothesPictureModel
-        fields = ['clothe', 'image']
+        fields = ['id', 'clothe', 'image']
+        required_fields = fields
 
 
 class ClotheModelSerializer(serializers.ModelSerializer):
     """Clothes model serializer."""
 
-    images = serializers.StringRelatedField(many=True)
+    images = serializers.StringRelatedField(many=True, read_only=True)
 
     class Meta:
         """Meta class."""

@@ -17,8 +17,6 @@ class ClothesPictureModel(TClothesModel):
     image = models.ImageField(
         'Picture image',
         upload_to='clothes/pictures/',
-        blank=True,
-        null=True,
     )
 
     def __str__(self):
