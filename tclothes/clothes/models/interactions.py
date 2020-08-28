@@ -3,17 +3,20 @@
 # Django
 from django.db import models
 
+# Utils
+from tclothes.utils.baseModels import TClothesModel
 
-class InteractionsModel(models.Model):
-    """Interactions model"""
+
+class InteractionsModel(TClothesModel):
+    """Interactions interactions model."""
 
     clothe = models.ForeignKey(
         'clothes.ClothesModel',
-        on_delete = models.CASCADE
+        on_delete=models.CASCADE
     )
-    user_id = models.IntegerField(
-        'Id user interaction acive',
-        null=False
+    user = models.ForeignKey(
+        'users.User',
+        on_delete=models.CASCADE,
     )
     INTERACTIVE_VALUES = [
         ('LIKE', 'like'),
@@ -22,10 +25,10 @@ class InteractionsModel(models.Model):
     ]
     value = models.CharField(
         'Interaction type',
-        max_length = 9,
-        choices = INTERACTIVE_VALUES,
+        max_length=9,
+        choices=INTERACTIVE_VALUES,
     )
 
     def __str__(self):
         """Return clothe, user, and interactive values"""
-        return f'clothe: {self.clothe} | user_id: {self.user_id} | value: {self.value}'
+        return f'clothe: {self.clothe} | user: {self.user} | value: {self.value}'

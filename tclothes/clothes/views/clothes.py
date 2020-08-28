@@ -45,10 +45,9 @@ class ClothesViewSet(mixins.ListModelMixin,
     def interactions(self, request, *args, **kwargs):
         user = request.user
         method = request.method
-        interaction_obj = InteractionsModel.objects.filter(user=user, clothe_id=request.data['clothe'])
         clothe = ClothesModel.objects.get(id=request.data['clothe'])
         user_action = request.data['value']
-        interaction = Interactions(user_action, interaction_obj, clothe)
+        interaction_obj = None
 
         # Validate input data
         serializer = InteractionsModelSerializer(
@@ -57,28 +56,35 @@ class ClothesViewSet(mixins.ListModelMixin,
         )
         serializer.is_valid(raise_exception=True)
 
-        # Verify Interaction don't exist. In case exist advice to user use PUT.
+        # Verify if interaction already exist.
+        try:
+            interaction_obj = InteractionsModel.objects.get(user=user, clothe_id=request.data['clothe'])
+        except InteractionsModel.DoesNotExist:
+            pass
+
+        # If action is POST. Create new Interaction object
         if method == 'POST':
-            matches = interaction_obj.count()
-            if matches == 0:
-                create_action = interaction.create
-                create_action()
+            if interaction_obj is None:
+                interaction = Interactions(user_action, clothe, True)
+                interaction.create()
+                serializer.save(user=user)
             else:
-                raise serializers.ValidationError(f'Use PUT, POST-clothes.')
+                raise serializers.ValidationError('Use PUT | POST-CLOTHES')
 
         # If actions is PUT go to update stats.
         if method == 'PUT':
-            create_action = interaction.update
-            create_action()
+            if interaction_obj is not None:
+                interaction = Interactions(user_action, clothe, False, interaction_obj)
+                interaction.update()
+            else:
+                raise serializers.ValidationError(f'Use POST | PUT-CLOTHES.')
 
-        # If everything goes OK save the interaction.
-        serializer.save(user=user)
         return Response(status=status.HTTP_202_ACCEPTED)
 
     @action(detail=False, methods=['get'])
     def notifications(self, request, *args, **kwargs):
         """Retrieve notifications user matches."""
         user = request.user
-        query = InteractionsModel.objects.filter(clothe__owner_is=user, value__in=['LIKE', 'SUPERLIKE'])
+        query = InteractionsModel.objects.filter(clothe__owner_is=user)  # value__in=['LIKE', 'SUPERLIKE']
         data = NotificationsModelSerializer(query, many=True).data
         return Response(data, status=status.HTTP_200_OK)
