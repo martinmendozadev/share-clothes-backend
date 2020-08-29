@@ -17,7 +17,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from tclothes.clothes.models import ClothesModel, InteractionsModel
 
 # Serializer
-from tclothes.clothes.serializers import ClotheModelSerializer, NotificationsModelSerializer
+from tclothes.clothes.serializers import ClotheDisplaySerializer, NotificationsModelSerializer
 
 # Interactions
 from tclothes.clothes.views.interactions import Interactions
@@ -30,7 +30,7 @@ class ClothesViewSet(mixins.ListModelMixin,
     Handle Clothes display.
     """
 
-    serializer_class = ClotheModelSerializer
+    serializer_class = ClotheDisplaySerializer
     queryset = ClothesModel.objects.filter(public=True)
     permission_classes = [IsAuthenticated]
 

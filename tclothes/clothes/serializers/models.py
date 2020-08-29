@@ -6,6 +6,8 @@ from rest_framework import serializers
 # Models
 from tclothes.clothes.models import ClothesModel, InteractionsModel, ClothesPictureModel
 
+# Foreign Serializers
+from tclothes.users.serializers import UserDisplaySerializer
 
 class InteractionsModelSerializer(serializers.ModelSerializer):
     """Interactions Model."""
@@ -44,7 +46,20 @@ class ClotheModelSerializer(serializers.ModelSerializer):
         """Meta class."""
         model = ClothesModel
         exclude = ['created_at', 'modified_at', 'owner_is']
-        read_only_fields = ['id', 'limit_pictures', 'likes', 'dislikes', 'super_likes']
+        read_only_fields = ['id', 'clothe_images', 'likes', 'dislikes', 'super_likes']
+
+
+class ClotheDisplaySerializer(serializers.ModelSerializer):
+    """Clothes model serializer."""
+
+    images = PictureClotheSerializer(many=True, read_only=True)
+    owner_is = UserDisplaySerializer(read_only=True)
+
+    class Meta:
+        """Meta class."""
+        model = ClothesModel
+        exclude = ['created_at', 'modified_at', 'dislikes', 'clothe_images', 'likes', 'super_likes']
+        read_only_fields = ['id']
 
 
 class NotificationsModelSerializer(serializers.ModelSerializer):
