@@ -23,12 +23,12 @@ class ClothesModel(TClothesModel):
         blank=True,
         null=True,
     )
-    limit_validator = MaxValueValidator(limit_value=9)
-    limit_pictures = models.PositiveSmallIntegerField(
+    limit_validator = MaxValueValidator(limit_value=2)
+    clothe_images = models.PositiveSmallIntegerField(
         'Clothe pictures related',
         default=0,
         validators=[limit_validator],
-        help_text="The limits for clothes pictures are 9 items. Excluding the main.",
+        help_text="The limits per clothes are 2 images. Excluding the main.",
     )
     description = models.TextField(
         'Clothe description',
