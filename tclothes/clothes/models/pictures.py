@@ -21,4 +21,4 @@ class ClothesPictureModel(TClothesModel):
 
     def __str__(self):
         """Return id picture and clothe str representation."""
-        return f'{self.image.url}'
+        return f'{self.id} | {self.image.url}'

@@ -39,6 +39,12 @@ class Profile(TClothesModel):
         help_text='Date time when the user did him/her last SUPERLIKE.'
     )
 
+    is_profile_complete = models.BooleanField(
+        'Profile complete',
+        default=False,
+        help_text="Is true when all profile info are complete."
+    )
+
     def __str__(self):
         """Return user's str representation."""
         return str(self.user)

@@ -2,6 +2,7 @@
 
 # Django REST framework
 from rest_framework.permissions import BasePermission
+from rest_framework.serializers import ValidationError
 
 # Models
 from tclothes.clothes.models import ClothesModel
@@ -16,7 +17,10 @@ class IsClotheOwner(BasePermission):
 
     def has_permission(self, request, view):
         try:
-            ClothesModel.objects.get(id=request.data['clothe'], owner_is=request.user)
+            clothe = request.data['clothe']
+            ClothesModel.objects.get(id=clothe, owner_is=request.user)
         except ClothesModel.DoesNotExist:
             return False
+        except KeyError:
+            raise ValidationError('Arguments are required.')
         return True

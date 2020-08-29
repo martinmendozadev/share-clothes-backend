@@ -63,7 +63,7 @@ class ClothesViewSet(mixins.ListModelMixin,
         # If action is POST when user dont have a Interaction with the clothe.
         if method == 'POST':
             if interaction_obj is None:
-                interaction = Interactions(user_action, clothe, True, user)
+                interaction = Interactions(user_action, clothe, user)
                 interaction.add_interaction()
                 serializer.save(user=user)
             else:
@@ -72,7 +72,7 @@ class ClothesViewSet(mixins.ListModelMixin,
         # If actions is PUT go to update stats.
         if method == 'PUT':
             if interaction_obj is not None:
-                interaction = Interactions(user_action, clothe, False, user, interaction_obj)
+                interaction = Interactions(user_action, clothe, user, interaction_obj)
                 interaction.update()
             else:
                 raise serializers.ValidationError('Use POST | User dont have a previous interaction with this clothe.')

@@ -16,6 +16,7 @@ class ProfileModelSerializer(serializers.ModelSerializer):
             'city',
             'state',
             'last_super_like',
+            'is_profile_complete',
         ]
         read_only_fields = ['last_super_like']
 

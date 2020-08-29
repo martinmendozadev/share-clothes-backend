@@ -14,12 +14,13 @@ from django.utils import timezone
 class Interactions:
     """Interactions objects define logic of all interactions of application"""
 
-    def __init__(self, user_action, clothe, is_new, user, interaction_obj=None):
+    def __init__(self, user_action, clothe, user, interaction_obj=None):
         self.user_action = user_action
         self.clothe = clothe
-        self.is_new = is_new
         self.user = user
+        self.user_profile = Profile.objects.get(user=self.user)
         self.interaction_obj = interaction_obj
+        self.last_action_same_to_current = False
         self.like = 'LIKE'
         self.dislike = 'DISLIKE'
         self.super_like = 'SUPERLIKE'
@@ -30,46 +31,40 @@ class Interactions:
             if self.interaction_obj.value == self.like:
                 self.clothe.likes -= 1
             elif self.interaction_obj.value == self.super_like:
-                if self.verify_time():
-                    self.clothe.super_likes -= 1
+                self.clothe.super_likes -= 1
             elif self.interaction_obj.value == self.dislike:
                 self.clothe.dislikes -= 1
-
-            self.clothe.save()
             self.add_interaction()
+        else:
+            self.last_action_same_to_current = True
 
     def add_interaction(self):
         """Add the stats to clothe."""
         if self.user_action == self.like:
             self.clothe.likes += 1
         elif self.user_action == self.super_like:
-            if self.is_new:
-                self.clothe.super_likes += 1
-            else:
-                if self.verify_time():
+            if self.verify_time():
+                if not self.last_action_same_to_current:
                     self.clothe.super_likes += 1
+                    self._update_last_super_like(self.user_profile)
         elif self.user_action == self.dislike:
             self.clothe.dislikes += 1
         self.clothe.save()
 
-        if not self.is_new:
+        if self.interaction_obj:
             self.interaction_obj.value = self.user_action
             self.interaction_obj.save()
 
     def verify_time(self):
         """Verify if user can do a super-like."""
-        user_profile = Profile.objects.get(user=self.user)
-        date_last_super_like = user_profile.last_super_like
+        date_last_super_like = self.user_profile.last_super_like
 
-        if date_last_super_like is None:
-            self._update_last_super_like(user_profile)
-            return True
-        else:
+        if date_last_super_like is not None:
             can_modify_at = date_last_super_like + timedelta(minutes=1)
             if timezone.now() > can_modify_at:
-                self._update_last_super_like(user_profile)
                 return True
             raise ValidationError('Solo se puede dar un SUPER-LIKE por minuto.')
+        return True
 
     @staticmethod
     def _update_last_super_like(profile):
