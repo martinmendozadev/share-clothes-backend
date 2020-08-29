@@ -1,1 +1,6 @@
-from .models import *
+from .models import (InteractionsModelSerializer,
+                     PictureClotheModelSerializer,
+                     PictureClotheSerializer,
+                     ClotheModelSerializer,
+                     ClotheDisplaySerializer,
+                     NotificationsModelSerializer)

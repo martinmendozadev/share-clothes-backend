@@ -1,7 +1,7 @@
 """User's serializer."""
 
 # Django
-from django.contrib.auth import authenticate, password_validation
+from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 
 # Django REST framework

@@ -4,11 +4,13 @@
 import random
 import csv
 
-class User():
+
+class User:
     """Create users class"""
     def __init__(self, how_many_users):
         self.how_many_users = how_many_users
 
+    @staticmethod
     def phone_number(self):
         """Create phone number random"""
         phone_number = []
@@ -18,6 +20,7 @@ class User():
         phone_num = ''.join(phone_number)
         return phone_num
 
+    @staticmethod
     def create_names(self):
         """Create names random with names in list of names base"""
         firsts_names = ['Maria', 'Ricardina', 'Mario', 'Lola', 'Sasha', 'Esteban', 'Martin', 'Juan']
@@ -28,6 +31,7 @@ class User():
 
         return [first_name, last_name]
 
+    @staticmethod
     def password(self):
         """Create random password """
         LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -45,9 +49,9 @@ class User():
 
     def write_user(self):
         """Write users in csv file"""
-        with open('users.csv', 'w') as usersfile:
-            writer = csv.writer(usersfile)
-            writer.writerow(['phone','first_name', 'last_name', 'password ', 'email'])
+        with open('users.csv', 'w') as users_file:
+            writer = csv.writer(users_file)
+            writer.writerow(['phone', 'first_name', 'last_name', 'password ', 'email'])
             for i in range(self.how_many_users):
                 phone_number = self.phone_number()
                 names = self.create_names()
@@ -63,18 +67,15 @@ class User():
                     email
                 ])
 
+
 def run():
-    """get input, number of users to create and run logic
-        to create users.
-    """
+    """Get input, number of users to create and run logic to create users."""
+
     how_many_users = int(input('¿Cuantos usuarios quiere crear?: '))
     create_user = User(how_many_users).write_user
     create_user()
-    print(f'se ha creado {how_many_users} usuarios')
-    
+    print(f'Se ha creado {how_many_users} usuarios')
+
 
 if __name__ == '__main__':
     run()
-    
-
-
