@@ -20,14 +20,14 @@ class UserLoginSerializer(serializers.Serializer):
     """
 
     phone_regex = RegexValidator(
-        regex=r'^[0-9]\d{9,14}$',
-        message="Numero de telefono debe ser imgresado con el formato: 123456789012. Entre 10 y 15 digitos."
+        regex=r'^[0-9]\d{9}$',
+        message="Numero de telefono debe tener 10 digitos: 1234567890."
     )
     phone_number = serializers.CharField(
         validators=[phone_regex],
-        max_length=15,
+        max_length=11,
         error_messages={
-            'max_length': "La longitud maxima de tu numero de telefono debe ser de 15 digitos.",
+            'max_length': "La longitud de tu numero de telefono debe ser de 10 digitos.",
         }
     )
     password = serializers.CharField(
@@ -36,7 +36,7 @@ class UserLoginSerializer(serializers.Serializer):
         error_messages={
             'min_length': "La longitud minima de la contraseña debe ser de 8 digitos.",
             'max_length': "La longitud maxima de tu contraseña debe ser de 64 digitos.",
-            'null': "Este campo no puede ser nulo.",
+            'null': "Este campo no puede ser vacio.",
             'blank': "Este campo no piede ser enviando en blanco."
         }
     )
@@ -62,15 +62,15 @@ class UserSignUpSerializer(serializers.Serializer):
 
     # username => phone_number
     username_regex = RegexValidator(
-        regex=r'^[0-9]\d{9,14}$',
-        message="Numero de telefono debe ser imgresado con el formato: 123456789012. Entre 10 y 15 digitos."
+        regex=r'^[0-9]\d{9}$',
+        message="La longitud de tu numero de telefono debe ser de 10 digitos."
     )
-    username_unique = UniqueValidator(queryset=User.objects.all(), message='Este numero, ya se encutra registrado.')
+    username_unique = UniqueValidator(queryset=User.objects.all(), message='Este numero, ya se encuentra registrado.')
     username = serializers.CharField(
-        max_length=15,
+        max_length=11,
         validators=[username_regex, username_unique],
         error_messages={
-            'max_length': "La longitud maxima de tu numero de telefono debe ser de 15 digitos.",
+            'max_length': "La longitud de tu numero de telefono debe ser de 10.",
         },
     )
 
@@ -94,8 +94,8 @@ class UserSignUpSerializer(serializers.Serializer):
         error_messages={
             'min_length': "La longitud minima de la contraseña debe ser de 8 digitos.",
             'max_length': "La longitud maxima de tu contraseña debe ser de 64 digitos.",
-            'null': "Este campo no puede ser nulo.",
-            'blank': "Este campo no piede ser enviando en blanco."
+            'null': "Este campo no puede ser vacio.",
+            'blank': "Este campo no puede ser enviando en blanco."
         },
     )
     password_confirmation = serializers.CharField(
@@ -104,8 +104,8 @@ class UserSignUpSerializer(serializers.Serializer):
         error_messages={
             'min_length': "La longitud minima de la contraseña debe ser de 8 digitos.",
             'max_length': "La longitud maxima de tu contraseña debe ser de 64 digitos.",
-            'null': "Este campo no puede ser nulo.",
-            'blank': "Este campo no piede ser enviando en blanco."
+            'null': "Este campo no puede ser vacio.",
+            'blank': "Este campo no puede ser enviando en blanco."
         },
     )
 
