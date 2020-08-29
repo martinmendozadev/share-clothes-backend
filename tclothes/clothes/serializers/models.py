@@ -16,17 +16,6 @@ class InteractionsModelSerializer(serializers.ModelSerializer):
         required_fields = fields
 
 
-class NotificationsModelSerializer(serializers.ModelSerializer):
-    """Interactions Model."""
-
-    user = serializers.ReadOnlyField(read_only=True, source='user.username')
-
-    class Meta:
-        model = InteractionsModel
-        fields = ['clothe', 'user', 'value']
-        read_only_fields = fields
-
-
 class PictureClotheModelSerializer(serializers.ModelSerializer):
     """Pictures model serializer."""
 
@@ -56,3 +45,15 @@ class ClotheModelSerializer(serializers.ModelSerializer):
         model = ClothesModel
         exclude = ['created_at', 'modified_at', 'owner_is']
         read_only_fields = ['id', 'limit_pictures', 'likes', 'dislikes', 'super_likes']
+
+
+class NotificationsModelSerializer(serializers.ModelSerializer):
+    """Interactions Model."""
+
+    user = serializers.ReadOnlyField(read_only=True, source='user.username')
+    clothe = ClotheModelSerializer(read_only=True)
+
+    class Meta:
+        model = InteractionsModel
+        fields = ['clothe', 'user', 'value']
+        read_only_fields = fields

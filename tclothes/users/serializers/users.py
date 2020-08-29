@@ -37,7 +37,7 @@ class UserLoginSerializer(serializers.Serializer):
             'min_length': "La longitud minima de la contraseña debe ser de 8 digitos.",
             'max_length': "La longitud maxima de tu contraseña debe ser de 64 digitos.",
             'null': "Este campo no puede ser vacio.",
-            'blank': "Este campo no piede ser enviando en blanco."
+            'blank': "Este campo no puede ser enviando en blanco."
         }
     )
 
@@ -115,7 +115,6 @@ class UserSignUpSerializer(serializers.Serializer):
         password_conf = data['password_confirmation']
         if password != password_conf:
             raise serializers.ValidationError("Contraseñas no coinciden.")
-        password_validation.validate_password(password)
         return data
 
     def create(self, data):
