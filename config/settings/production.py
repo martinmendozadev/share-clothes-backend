@@ -6,6 +6,7 @@ from .base import env
 # Base
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 ALLOWED_HOSTS = [
+    "165.232.59.182",
     "68.183.108.146",
     "0.0.0.0"
 ]
