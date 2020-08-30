@@ -1,31 +1,27 @@
-"""Scipt to create clothes"""
+"""Scripts to create clothes"""
 
 # Utilities
 import csv
 import random
 
-categories_list = ['camisa','blusa','camiseta','chaqueta', 'pantalones', 'falda', 'sombrero', 'gorra']
+categories_list = ['camisa', 'blusa', 'camiseta', 'chaqueta', 'pantalones', 'falda', 'sombrero', 'gorra']
 SIZES_LIST = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'NS']
 color_list = ['amarillo', 'verde', 'rojo', 'azul', 'beige', 'naranja']
 GENDER_LIST = ['F', 'M', 'U', 'NS']
-brands_list = ['chevignon','americanino','rose pistol','diesel','gucci']
+brands_list = ['chevignon', 'americanino', 'rose pistol', 'diesel', 'gucci']
 
 
 class Clothes:
     def __init__(self, how_many_clothes):
         self.how_many_clothes = how_many_clothes
-    
-    def get_description(self):
-        pass
-    
-    def get_url_picture(self):
-        pass
-    
+
+    @staticmethod
     def choice_function(self, values_list):
         """Choice value random of values lists"""
         value = random.choice(values_list)
         return value
 
+    @staticmethod
     def random_boolean(self):
         """Choice random value for generate true or false"""
         value = random.randint(0, 2)
@@ -57,16 +53,18 @@ class Clothes:
                     is_hide
                 ])
 
+
 def run():
     """Run script logic to create clothes"""
-    how_many_clothes = int(input('¿cuantas prendas quieres crear?: '))
+    how_many_clothes = int(input('¿Cuantas prendas quieres crear?: '))
     create_clothe = Clothes(how_many_clothes).write
     create_clothe()
-    print (f'Se han creado {how_many_clothes} prendas')
+    print(f'Se han creado {how_many_clothes} prendas')
 
-if __name__ == '__main__':    
+
+if __name__ == '__main__':
     try:
         run()
     except ValueError:
-        print ('Error: Debe ingresar un numero entero de prendas a crear:')
+        print('Error: Debe ingresar un numero entero de prendas a crear:')
         run()

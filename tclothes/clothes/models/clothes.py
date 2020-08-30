@@ -23,6 +23,18 @@ class ClothesModel(TClothesModel):
         blank=True,
         null=True,
     )
+    picture2 = models.ImageField(
+        'Second clothe picture',
+        upload_to='clothes/pictures/',
+        blank=True,
+        null=True,
+    )
+    picture3 = models.ImageField(
+        'Three clothe picture',
+        upload_to='clothes/pictures/',
+        blank=True,
+        null=True,
+    )
     limit_validator = MaxValueValidator(limit_value=2)
     clothe_images = models.PositiveSmallIntegerField(
         'Clothe pictures related',
@@ -43,6 +55,7 @@ class ClothesModel(TClothesModel):
         ('L', 'Large'),
         ('XL', 'Extra Large'),
         ('XXL', 'Super Extra Large'),
+        ('XXXL', 'Super Super Extra Large'),
         ('NS', 'No specific'),
     ]
     size = models.CharField(
@@ -65,17 +78,16 @@ class ClothesModel(TClothesModel):
         blank=True,
     )
     GENDER = [
-        ('F', 'Female'),
-        ('M', 'Male'),
-        ('U', 'Unisex'),
-        ('NS', 'No specific')
+        ('Femenino', 'Femenino'),
+        ('Masculino', 'Masculino'),
+        ('Otro', 'Otro')
     ]
     gender = models.CharField(
         'Gender preferential for clothe.',
         max_length=2,
         choices=GENDER,
         default='NS',
-        help_text="F, M ,U. (NS) No specific.",
+        help_text="Genero preferido para la prenda.",
     )
     brand = models.CharField(
         'Clothe brand',
@@ -83,17 +95,17 @@ class ClothesModel(TClothesModel):
         blank=True,
     )
     CLOTHE_STATE = [
-        ('N', 'New'),
-        ('G', 'Good'),
-        ('U', 'Used'),
-        ('NS', 'No specific')
+        ('Nuevo', 'Nuevo'),
+        ('Bueno', 'Bueno'),
+        ('Regular', 'Regular'),
+        ('Malo', 'Malo')
     ]
     state = models.CharField(
         'Clothe state',
         max_length=2,
         choices=CLOTHE_STATE,
         default='NS',
-        help_text="F, M ,U. (NS) No specific.",
+        help_text="Estado de la prenda.",
     )
 
     # Status

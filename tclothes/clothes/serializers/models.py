@@ -4,7 +4,10 @@
 from rest_framework import serializers
 
 # Models
-from tclothes.clothes.models import ClothesModel, InteractionsModel, ClothesPictureModel
+from tclothes.clothes.models import ClothesModel, InteractionsModel
+
+# Foreign Serializers
+from tclothes.users.serializers import UserDisplaySerializer
 
 
 class InteractionsModelSerializer(serializers.ModelSerializer):
@@ -16,35 +19,26 @@ class InteractionsModelSerializer(serializers.ModelSerializer):
         required_fields = fields
 
 
-class PictureClotheModelSerializer(serializers.ModelSerializer):
-    """Pictures model serializer."""
-
-    class Meta:
-        """Meta class."""
-        model = ClothesPictureModel
-        fields = ['id', 'clothe', 'image']
-        required_fields = fields
-
-
-class PictureClotheSerializer(serializers.ModelSerializer):
-    """Images  serializer."""
-
-    class Meta:
-        """Meta class."""
-        model = ClothesPictureModel
-        fields = ['id', 'image']
-
-
 class ClotheModelSerializer(serializers.ModelSerializer):
     """Clothes model serializer."""
-
-    images = PictureClotheSerializer(many=True, read_only=True)
 
     class Meta:
         """Meta class."""
         model = ClothesModel
         exclude = ['created_at', 'modified_at', 'owner_is']
-        read_only_fields = ['id', 'limit_pictures', 'likes', 'dislikes', 'super_likes']
+        read_only_fields = ['id', 'clothe_images', 'likes', 'dislikes', 'super_likes']
+
+
+class ClotheDisplaySerializer(serializers.ModelSerializer):
+    """Clothes model serializer."""
+
+    owner_is = UserDisplaySerializer(read_only=True)
+
+    class Meta:
+        """Meta class."""
+        model = ClothesModel
+        exclude = ['created_at', 'modified_at', 'dislikes', 'clothe_images', 'likes', 'super_likes']
+        read_only_fields = ['id']
 
 
 class NotificationsModelSerializer(serializers.ModelSerializer):

@@ -17,8 +17,21 @@ class ProfileModelSerializer(serializers.ModelSerializer):
             'state',
             'last_super_like',
             'is_profile_complete',
+            'remaining_clothes',
         ]
         read_only_fields = ['last_super_like']
+
+
+class ProfileDisplaySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = [
+            'picture',
+            'city',
+            'state',
+        ]
+        read_only_fields = fields
 
 
 class UserModelSerializer(serializers.ModelSerializer):
@@ -33,3 +46,17 @@ class UserModelSerializer(serializers.ModelSerializer):
             'email',
             'profile',
         ]
+
+
+class UserDisplaySerializer(serializers.ModelSerializer):
+    profile = ProfileDisplaySerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'profile',
+        ]
+        read_only_fields = fields

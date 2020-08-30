@@ -31,7 +31,7 @@ class ProfileAdmin(admin.ModelAdmin):
             'fields': (
                 ('user', 'picture'),
                 ('city', 'state'),
-                ('last_super_like', 'is_profile_complete')
+                ('last_super_like', 'is_profile_complete', 'remaining_clothes')
             )
         }),
     ]

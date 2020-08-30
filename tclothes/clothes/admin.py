@@ -4,7 +4,7 @@
 from django.contrib import admin
 
 # Models
-from tclothes.clothes.models import ClothesModel, InteractionsModel, ClothesPictureModel
+from tclothes.clothes.models import ClothesModel, InteractionsModel
 
 
 @admin.register(ClothesModel)
@@ -22,9 +22,3 @@ class InteractionsAdmin(admin.ModelAdmin):
     """Interactions model admin."""
     list_display = ('id', 'clothe', 'user', 'value')
 
-
-@admin.register(ClothesPictureModel)
-class ClothesPicturesAdmin(admin.ModelAdmin):
-    """Clothes pictures model admin."""
-    list_display = ('id', 'clothe', 'image')
-    search_fields = ('clothe',)
