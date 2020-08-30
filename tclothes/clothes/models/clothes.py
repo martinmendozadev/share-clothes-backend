@@ -60,7 +60,7 @@ class ClothesModel(TClothesModel):
     ]
     size = models.CharField(
         'Clothe size',
-        max_length=3,
+        max_length=4,
         choices=CLOTHES_SIZE,
         default='NS',
         help_text="Base on international sizes. NS means 'no specific'.",
@@ -84,7 +84,7 @@ class ClothesModel(TClothesModel):
     ]
     gender = models.CharField(
         'Gender preferential for clothe.',
-        max_length=2,
+        max_length=9,
         choices=GENDER,
         default='NS',
         help_text="Genero preferido para la prenda.",
@@ -102,7 +102,7 @@ class ClothesModel(TClothesModel):
     ]
     state = models.CharField(
         'Clothe state',
-        max_length=2,
+        max_length=7,
         choices=CLOTHE_STATE,
         default='NS',
         help_text="Estado de la prenda.",
