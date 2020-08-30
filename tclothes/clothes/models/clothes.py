@@ -23,6 +23,18 @@ class ClothesModel(TClothesModel):
         blank=True,
         null=True,
     )
+    picture2 = models.ImageField(
+        'Second clothe picture',
+        upload_to='clothes/pictures/',
+        blank=True,
+        null=True,
+    )
+    picture3 = models.ImageField(
+        'Three clothe picture',
+        upload_to='clothes/pictures/',
+        blank=True,
+        null=True,
+    )
     limit_validator = MaxValueValidator(limit_value=2)
     clothe_images = models.PositiveSmallIntegerField(
         'Clothe pictures related',

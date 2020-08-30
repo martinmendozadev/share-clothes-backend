@@ -4,7 +4,7 @@
 from rest_framework import serializers
 
 # Models
-from tclothes.clothes.models import ClothesModel, InteractionsModel, ClothesPictureModel
+from tclothes.clothes.models import ClothesModel, InteractionsModel
 
 # Foreign Serializers
 from tclothes.users.serializers import UserDisplaySerializer
@@ -19,29 +19,8 @@ class InteractionsModelSerializer(serializers.ModelSerializer):
         required_fields = fields
 
 
-class PictureClotheModelSerializer(serializers.ModelSerializer):
-    """Pictures model serializer."""
-
-    class Meta:
-        """Meta class."""
-        model = ClothesPictureModel
-        fields = ['id', 'clothe', 'image']
-        required_fields = fields
-
-
-class PictureClotheSerializer(serializers.ModelSerializer):
-    """Images  serializer."""
-
-    class Meta:
-        """Meta class."""
-        model = ClothesPictureModel
-        fields = ['id', 'image']
-
-
 class ClotheModelSerializer(serializers.ModelSerializer):
     """Clothes model serializer."""
-
-    images = PictureClotheSerializer(many=True, read_only=True)
 
     class Meta:
         """Meta class."""
@@ -53,7 +32,6 @@ class ClotheModelSerializer(serializers.ModelSerializer):
 class ClotheDisplaySerializer(serializers.ModelSerializer):
     """Clothes model serializer."""
 
-    images = PictureClotheSerializer(many=True, read_only=True)
     owner_is = UserDisplaySerializer(read_only=True)
 
     class Meta:

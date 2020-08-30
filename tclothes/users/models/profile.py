@@ -2,6 +2,7 @@
 
 # Django
 from django.db import models
+from django.core.validators import MaxValueValidator
 
 # Utilities
 from tclothes.utils.baseModels import TClothesModel
@@ -37,6 +38,14 @@ class Profile(TClothesModel):
         'Last SUPER-LIKE date',
         null=True,
         help_text='Date time when the user did him/her last SUPERLIKE.'
+    )
+
+    limit_validator = MaxValueValidator(limit_value=10)
+    remaining_clothes = models.PositiveSmallIntegerField(
+        'Clothe pictures related',
+        default=0,
+        validators=[limit_validator],
+        help_text="Solo puedes subir un total de 10 prendas.",
     )
 
     is_profile_complete = models.BooleanField(

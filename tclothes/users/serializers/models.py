@@ -17,6 +17,7 @@ class ProfileModelSerializer(serializers.ModelSerializer):
             'state',
             'last_super_like',
             'is_profile_complete',
+            'remaining_clothes',
         ]
         read_only_fields = ['last_super_like']
 
