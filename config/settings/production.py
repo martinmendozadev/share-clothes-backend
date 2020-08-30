@@ -37,6 +37,18 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [  # noqa F405
 # Admin
 ADMIN_URL = env('DJANGO_ADMIN_URL')
 
+# Statics
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_URL = "https://165.232.59.182:8000/static/"
+
+# Media
+DEFAULT_FILE_STORAGE = "tclothes.utils.storages.MediaRootS3Boto3Storage"
+MEDIA_URL = 'https://165.232.59.182:8000/media/'
+
+# WhiteNoise
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')  # noqa F405
+
+
 # Logging
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
