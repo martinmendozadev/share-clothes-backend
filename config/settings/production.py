@@ -47,8 +47,10 @@ AWS_S3_OBJECT_PARAMETERS = {
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
+DEFAULT_FILE_STORAGE = "tclouthe.utils.storages.MediaRootS3Boto3Storage"
+MEDIA_URL = f"https://{aws_s3_domain}/media/"
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
 
 # Templates
 TEMPLATES[0]['OPTIONS']['loaders'] = [  # noqa F405
