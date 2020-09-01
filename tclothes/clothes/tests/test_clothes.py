@@ -5,9 +5,11 @@ from django.test import TestCase
 
 # Django REST framework
 from rest_framework import status
+from rest_framework.test import APITestCase
 
 # Models
 from tclothes.users.models import User, Profile
+from rest_framework.authtoken.models import Token
 
 
 class UserTestCase(TestCase):
@@ -50,18 +52,77 @@ class UserTestCase(TestCase):
         request = self.client.post('/clothes/notifications/', data)
         self.assertEqual(request.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_create_clothe(self):
-        """Verify request is accept to create clothe."""
-        data = {
-            'owner_is': self.owner_is,
-            'description': self.description,
-            'size': self.size,
-            'color': self.color,
-            'category': self.category,
-            'gender': self.gender,
-            'brand': self.brand,
-            'state': self.state,
-            'public': self.public,
+
+class UsersClothesAPITestsCase(APITestCase):
+    """Users clothes API test case."""
+    def setUp(self):
+        """Test case clothes."""
+        self.user = User.objects.create(
+            first_name = 'Andrea',
+            last_name = 'Beltran',
+            username = '3315588603',
+            password = 'user12345',
+        )
+        self.profile = Profile.objects.create(user=self.user)
+
+        self.data_clothe = {
+            'owner_is': self.user,
+            'description': 'This is a beautiful t-shirt',
+            'size': 'M',
+            'color': 'Blue',
+            'category': 'T-shirt',
+            'gender': 'Otro',
+            'brand': 'LV',
+            'state': 'Bueno',
+            'public': True
         }
-        request = self.client.post('/clothes/myclothes/', data)
+
+        self.token = Token.objects.create(user=self.user).key
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {self.token}')
+
+        # URL
+        self.url = '/clothes/myclothes/'
+        self.url_interactions = '/clothes/interactions/'
+
+    def test_sucess_create_clothe(self):
+        """Verify create clothe success."""
+        data = self.data_clothe
+        request = self.client.post(self.url, data)
         self.assertEqual(request.status_code, status.HTTP_201_CREATED)
+
+    def test_success_update_clothe(self):
+        """Verify updated clothe success"""
+        data_clothe = self.data_clothe
+        data_clothe['description'] = 'This other description clothe'
+        data = data_clothe
+        clothe = self.client.post(self.url, data_clothe)
+        id_clothe = clothe.data['id']
+        url = f'{self.url}{id_clothe}/'
+        request = self.client.patch(url, data)
+        self.assertEqual(request.status_code, status.HTTP_200_OK)
+    
+    def test_success_list_user_clothe(self):
+        """Verify update user clothe"""
+        request = self.client.get(self.url)
+        self.assertEqual(request.status_code, status.HTTP_200_OK)
+
+    def test_success_delete_user_clothe(self):
+        """Verify delete user clothe"""
+        data_clothe = self.data_clothe
+        clothe = self.client.post(self.url, self.data_clothe)
+        id_clothe = clothe.data['id']
+        url = f'{self.url}{id_clothe}/'
+        request = self.client.delete(url)
+        self.assertEqual(request.status_code, status.HTTP_204_NO_CONTENT)
+    
+    def test_success_clothe_interactions(self):
+        """Verify create interactions success"""
+        data_clothe = self.data_clothe
+        clothe = self.client.post(self.url, self.data_clothe)
+        id_clothe = clothe.data['id']
+        data = {
+            'clothe': id_clothe,
+            'value': 'LIKE'
+        }
+        request = self.client.post(self.url_interactions, data)
+        self.assertEqual(request.status_code, status.HTTP_202_ACCEPTED)
