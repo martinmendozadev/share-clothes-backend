@@ -12,64 +12,53 @@ class UserTestCase(TestCase):
 
     def setUp(self):
         """Test case user setup."""
-        self.phone_number = "12345678909"
-        self.first_name = "Ana"
-        self.last_name = "Ibarra"
-        self.password = "admin12345"
-        self.password_confirmation = "admin12345"
         self.signup_url = "/users/signup/"
         self.login_url = "/users/login/"
-        self.token = None
+
+        self.data = {
+            "username": "1234567893",
+            "first_name": "Elisabeth",
+            "last_name": "Sanchez",
+            "password": "admin12345",
+            "password_confirmation": "admin12345"
+        }
+        self.login_data = {
+            "phone_number": self.data['username'],
+            "password": self.data['password'],
+        }
 
     def test_signup_success(self):
         """Verify request success user signup."""
-
-        data = {
-            "username": self.phone_number,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "password": self.password,
-            "password_confirmation": self.password_confirmation
-        }
-        request = self.client.post(self.signup_url, data)
-        self.token = request.data['token']
+        request = self.client.post(self.signup_url, self.data)
         self.assertEqual(request.status_code, status.HTTP_201_CREATED)
 
     def test_signup_required_fields(self):
         """Verify request user signup fail for fields are incomplete."""
 
-        data = {
-            "username": self.phone_number,
-            "first_name": self.first_name,
-            "password": self.password,
-            "password_confirmation": self.password_confirmation,
-        }
+        data = self.data
+        data['last_name'] = ''
         request = self.client.post(self.signup_url, data)
         self.assertEqual(request.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_signup_password_dont_match(self):
         """Verify request user signup fail for password confirmation."""
 
-        data = {
-            "username": self.phone_number,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "password": self.password,
-            "password_confirmation": self.password_confirmation + '123',
-        }
+        data = self.data
+        data['password'] = data['password'] + '123'
         request = self.client.post(self.signup_url, data)
         self.assertEqual(request.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_success(self):
         """Verify request success user login."""
-
-        data = {
-            "phone_number": self.phone_number,
-            "password": self.password,
-        }
+        signup = self.client.post(self.signup_url, self.data)
+        data = self.login_data
         request = self.client.post(self.login_url, data)
         self.assertEqual(request.status_code, status.HTTP_201_CREATED)
-
+        
     def test_not_none_token(self):
         """Verify if token is return in the login"""
-        self.assertIsNotNone(self.token)
+        signup = self.client.post(self.signup_url, self.data)
+        data = self.login_data
+        login = self.client.post(self.login_url, data)
+        token = login.data['token']
+        self.assertIsNotNone(token)
