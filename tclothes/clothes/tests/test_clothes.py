@@ -12,23 +12,11 @@ from tclothes.users.models import User, Profile
 from rest_framework.authtoken.models import Token
 
 
-class UserTestCase(TestCase):
+class ClothesTestCase(TestCase):
     """Clothes test case entry-points."""
 
     def setUp(self):
         """Test case clothes."""
-        user = User.objects.create_user(username='6138355215', password='admin12345')
-        Profile.objects.create(user=user)
-
-        self.owner_is = user
-        self.description = 'This is a beautiful t-shirt'
-        self.size = 'M'
-        self.color = 'Blue'
-        self.category = 'T-shirt'
-        self.gender = 'Otro'
-        self.brand = 'LV'
-        self.state = 'Bueno'
-        self.public = True
 
     def test_clothes_authorization(self):
         """Verify request is unauthorized at clothes."""
@@ -114,7 +102,7 @@ class UsersClothesAPITestsCase(APITestCase):
         url = f'{self.url}{id_clothe}/'
         request = self.client.delete(url)
         self.assertEqual(request.status_code, status.HTTP_204_NO_CONTENT)
-    
+
     def test_success_clothe_interactions(self):
         """Verify create interactions success"""
         data_clothe = self.data_clothe
